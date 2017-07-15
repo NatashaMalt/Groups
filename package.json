@@ -19,8 +19,10 @@
   "dependencies": {
     "bluebird": "^3.5.0",
     "body-parser": "^1.17.2",
+    "dotenv": "^4.0.0",
     "express": "^4.15.3",
     "mailgun-js": "^0.11.2",
-    "morgan": "^1.8.2"
+    "morgan": "^1.8.2",
+    "nodemailer": "^4.0.1"
   }
 }
