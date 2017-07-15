@@ -65,6 +65,15 @@
             <h1>Groups</h1>
             <br>
             <a href="#about" class="btn btn-dark btn-lg">Find A Group</a>
+            <form id="email-form">
+              name:<br>
+              <input type="text" name="name" id="input-name">
+              <br>
+              email:<br>
+              <input type="email" name="email" id="input-email">
+              <br><br>
+              <input type="submit" value="Submit">
+            </form> 
         </div>
     </header>
 
@@ -230,6 +239,27 @@
         }
         // Enable map zooming with mouse scroll when the user clicks the map
     $('.map').on('click', onMapClickHandler);
+    $('#email-form').on('submit', function(e){
+        e.preventDefault();
+        var $inputs = $('#email-form :input');
+
+        // not sure if you wanted this, but I thought I'd add it.
+        // get an associative array of just the values.
+        var values = {};
+        values.name = $('#email-form #input-name').val();
+        values.email = $('#email-form #input-email').val();
+        console.log('values are >>>', values);
+    
+        $.ajax({
+            method: 'POST', 
+            url: "/api/send_email",
+            data: values,
+            success: function(result){
+                console.log("result is >>>", result);
+            }
+        });
+        
+    })
     </script>
 
 </body>
