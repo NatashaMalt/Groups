@@ -15,6 +15,14 @@ app.use(bodyParser.text());
 app.set('port', (process.env.PORT || 3030));
 app.use(express.static('public/startbootstrap-stylish-portfolio-gh-pages'));
 
+app.get('/', (req, res) => {
+  res.sendFile('./public/startbootstrap-stylish-portfolio-gh-pages/index.html');
+})
+
+app.get('/about', (req, res) => {
+  res.sendFile('login.html', {root: './public/startbootstrap-stylish-portfolio-gh-pages/'});
+})
+
 app.post("/api/send_email", (req, res) => {
   //console.log("request.body is >>>", req.body);
   const { name, email } = req.body;
