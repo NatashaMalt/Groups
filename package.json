@@ -1,0 +1,26 @@
+{
+  "name": "group",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NatashaMalt/Groups.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/NatashaMalt/Groups/issues"
+  },
+  "homepage": "https://github.com/NatashaMalt/Groups#readme",
+  "dependencies": {
+    "bluebird": "^3.5.0",
+    "body-parser": "^1.17.2",
+    "express": "^4.15.3",
+    "mailgun-js": "^0.11.2",
+    "morgan": "^1.8.2"
+  }
+}
