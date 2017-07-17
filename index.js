@@ -2,9 +2,19 @@ const express = require('express');
 const bodyParser = require("body-parser");
 const logger = require('morgan');
 const Promise = require('bluebird');
-const api_key = 'key-f0bca95dfb44431f619d3f0449e92306';
-const domain_name = 'sandbox69de68c65a51418cb9bdc770bb2a648d.mailgun.org';
-const mailgun = require('mailgun-js')({apiKey: api_key, domain: domain_name});
+const nodemailer = require('nodemailer');
+require('dotenv').config();
+
+var transporter = nodemailer.createTransport({
+  service: "gmail",
+  auth: {
+      user: process.env.NODE_MAILER_EMAIL,
+      pass: process.env.NODE_MAILER_PASS,
+  }
+});
+
+// setup email data with unicode symbols
+
 
 const app = express();
 // Log activity
@@ -27,20 +37,26 @@ app.post("/api/send_email", (req, res) => {
   //console.log("request.body is >>>", req.body);
   const { name, email } = req.body;
   console.log("here in the api>>>, req.body is >>>", req.body);
-  let data = {
-    from: 'sevenlist0110@gmail.com',
-    to: email,
-    subject: 'Welcome !',
-    text: `Hi, welcome ${name} !`
+  
+  let mailOptions = {
+      from: '"Test User" <groupapp4you@gmail.com>', // sender address
+      to: ''+ email, // list of receivers
+      subject: 'Welcome !', // Subject line
+      text: `Hi, welcome ${name} !`,
+      html: `<b>Hi, welcome ${name} !</b>` // html body
   };
   
-  mailgun.messages().send(data, function (error, body) {
-    if (error) {
-      console.log('sending email error>>>', error);
-      res.end(500);
+  transporter.sendMail(mailOptions, function(error, info){
+    if(error) {
+      console.log("error is >>>", error);
+      res.send(500);
+    } else {
+      console.log("info is>>>", info);
+      console.log('Message sent: ' + info.response);
+      res.send(200); 
     }
-    res.json('ok');
   });
+  
   
 })
 
