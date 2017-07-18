@@ -1,4 +1,5 @@
 const express = require('express');
+const path = require('path');
 const bodyParser = require("body-parser");
 const logger = require('morgan');
 const Promise = require('bluebird');
@@ -24,6 +25,12 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.text());
 app.set('port', (process.env.PORT || 3030));
 app.use(express.static('public/startbootstrap-stylish-portfolio-gh-pages'));
+app.use(express.static('node_modules'));
+app.use(function(req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  next();
+});
 
 app.get('/', (req, res) => {
   res.sendFile('./public/startbootstrap-stylish-portfolio-gh-pages/index.html');
@@ -31,6 +38,11 @@ app.get('/', (req, res) => {
 
 app.get('/about', (req, res) => {
   res.sendFile('login.html', {root: './public/startbootstrap-stylish-portfolio-gh-pages/'});
+});
+
+app.get('/chat', (req, res) => {
+  
+  res.sendFile('chat.html', {root: './public/startbootstrap-stylish-portfolio-gh-pages/'});
 })
 
 app.post("/api/send_email", (req, res) => {
