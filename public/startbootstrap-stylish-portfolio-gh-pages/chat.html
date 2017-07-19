@@ -20,30 +20,52 @@
                 return;
             } else {
                 console.log("user is >>>", user);
+                var ChannelHandler = new sb.ChannelHandler();
+                var lastMsgTimeMark = {latest_time: 0};
+                ChannelHandler.onMessageReceived = function(channel, message){
+                    console.log("channels are msgs are>>>", channel, message);
+                };
+
+                sb.addChannelHandler(12344, ChannelHandler);
+
                 sb.OpenChannel.getChannel(testOpenChannel, function(channel, error){
                     channel.enter(function(response, error){
                         currChannelInfo = channel;
-                        PreviousMessageListQuery = currChannelInfo.createPreviousMessageListQuery();
 
-                        PreviousMessageListQuery.load(30, false, function(messages, error) {
-                            console.log("messages are >>>", messages);
-                            for (var i=0; i<messages.length; i++) {
-                                $("#messages").append("<div>"+messages[i].message+"</div>")
-                            }
-                        })
+                        setInterval(function(){
+                            refreshMessages(currChannelInfo, lastMsgTimeMark)
+                        }, 1000)
                     })    
                 })
             }
         }) 
         $("#add_message").click(function(e){
             var msg = $("#new_message").val().trim();
-
+            $("#new_message").val('');
             console.log('clicked');
             currChannelInfo.sendUserMessage(msg, '', function(msg, error){
                 console.log("sendMessage msg is >>>", msg);
                 console.log("sendMessage err is >>>", error);
             })
         })
+
+        function refreshMessages(channel, lastMsgTimeMark) {
+            var messageListQuery = channel.createPreviousMessageListQuery();
+
+            messageListQuery.load(30, true, function(messages, error){
+                if (error) {
+                    console.error(error);
+                    return;
+                }
+                for (var i=messages.length-1; i>=0; i--) {
+                    if(messages[i].createdAt >lastMsgTimeMark.latest_time) {
+                        $("#messages").append("<div>"+messages[i]._sender.nickname+" : "+messages[i].message+"</div>");
+                    }
+                    
+                }
+                lastMsgTimeMark.latest_time = messages.length ? messages[0].createdAt: 0;
+            });
+        }
     </script>
     </body>
 </html>
